@@ -1,7 +1,9 @@
 const fs = require("fs");
 const whois = require("whois");
 // Ka padaryti?
-const pages = ["facebook", "google"];
+//
+const tldsFile = "tlds.txt";
+const pages = ["facebook"];
 // Padaryti automatini path'o nustatyma
 
 const settings = {
@@ -12,25 +14,23 @@ const settings = {
 };
 
 function init() {
-  fs.readFile(
-    "/home/ceazcypher/Programming/Tiny_Projects/domain_lookup/src/tlds.txt",
-    "utf8",
-    (err, tlds) => {
-      if (err) {
-        console.log(err);
+  fs.readFile(__dirname + "/" + tldsFile, "utf8", (err, tlds) => {
+    if (err) {
+      console.log(err);
 
-        return;
-      }
-      tlds = tlds.split("\n");
-      iterateOverData(tlds, pages);
+      return;
     }
-  );
+    tlds = tlds.split("\n");
+    iterateOverData(tlds, pages);
+  });
 }
+
 function search(name) {
   whois.lookup(name, settings, (err, data) => {
     if (!data) return false;
     if (data[0].data.search("%ERROR:101: no entries found") > 0) {
       console.log(`${name} it's a match`);
+      addToFile(name);
       return [true, name];
     }
     return [false, name];
@@ -39,6 +39,9 @@ function search(name) {
 
 async function iterateOverData(tlds, pages) {
   for (let i = 0; i < pages.length; i += 1) {
+    addToFile("\n");
+    addToFile("\n");
+    addToFile("|" + pages[i] + "|");
     for (let v = 0; v < tlds.length; v += 1) {
       let name = `${pages[i]}.${tlds[v].toLowerCase()}`;
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -47,4 +50,12 @@ async function iterateOverData(tlds, pages) {
   }
 }
 
+function addToFile(match) {
+  fs.appendFile("./src/matches.txt", match + "\n", (err) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+  });
+}
 init();
