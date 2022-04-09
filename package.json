@@ -1,0 +1,14 @@
+{
+  "name": "domain_lookup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "whois": "^2.13.9"
+  }
+}
