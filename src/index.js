@@ -3,7 +3,7 @@ const whois = require("whois");
 // Ka padaryti?
 //
 const tldsFile = "tlds.txt";
-const pages = ["facebook"];
+const pages = [];
 // Padaryti automatini path'o nustatyma
 
 const settings = {
